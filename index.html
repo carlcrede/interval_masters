@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interval Champions</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <main>
+        <div id="welcomeHeader">Welcome to Interval Champions!</div>
+        <div id="tutorial">Choose a specific interval you want to practice.<br>
+            The intervals will play and come falling from the sky as a note.<br>
+            You then have to collect as many correct notes as you can.<br><br>
+            Example: You have chosen minor thirds. Minor and major thirds will be played at random.<br>
+            You have to collect only the ones that are in fact minor thirds.</div>
+        <div id="intervals">
+            <div>Minor 2nd</div>
+            <div>Major 2nd</div>
+            <div>Minor 3rd</div>
+            <div>Major 3rd</div>
+            <div>Perfect 4th</div>
+            <div>Perfect 5th</div>
+            <div>Minor 6th</div>
+            <div>Major 6th</div>
+            <div>Minor 7th</div>
+            <div>Major 7th</div>
+            <div>Minor Chord</div>
+            <div>Major Chord</div>
+        </div>
+        <button id="nextBtn">Next</button>
+        <div id="game">
+            <div id="score">0</div>
+            <div id="lives">3</div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="btn">
+            <button id="startGameBtn">Start Game</button>
+        </div>
+    </main>
+    
+    <script src="https://unpkg.com/tone"></script>
+    <script src="music.js"></script>
+    <script src="game.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
