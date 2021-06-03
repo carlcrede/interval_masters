@@ -21,7 +21,7 @@ const constructMajorTriad = (root) => {
     const fifth = scale[4];
     let triad = [root, third, fifth];
     triad = triad.map((value, index) => value + '4');
-    return {triad, type: 'major'};
+    return {triad, type: 'majorChord'};
 }
 
 const constructMinorTriad = (root) => {
@@ -31,5 +31,5 @@ const constructMinorTriad = (root) => {
     const fifth = scale[4];
     let triad = [root, third, fifth];
     triad = triad.map((value, index) => value + '4');
-    return {triad, type: 'minor'};
+    return {triad, type: 'minorChord'};
 }

@@ -6,7 +6,7 @@ const ctx = canvas.getContext('2d');
 const startBtn = document.getElementById('startGameBtn');
 
 // player should choose what to practice - defaulting to minor
-const playerGoal = 'minor';
+let playerGoal, instrument;
 
 // player and note icons
 const playerIcon = new Image();
@@ -15,10 +15,10 @@ playerIcon.src = './img/playerIcon.png'
 quarterNoteIcon.src = './img/quarter_note.png';
 
 // synth
-const synth = new Tone.PolySynth().toDestination();
+//const synth = new Tone.PolySynth().toDestination();
 const noteSpeed = 1;
 const noteLength = '2n';
-const nextNoteInterval = 5000; 
+const nextNoteInterval = 3000; 
 
 // player settings
 const MOVEMENT_SPEED = 3;
@@ -29,6 +29,13 @@ let player = {};
 
 // object holding keypresses
 let keyPresses = {};
+
+const synth = SampleLibrary.load({
+    instruments: 'piano',
+    minify: true
+});
+synth.toDestination();
+Tone.Master.volume.value = '-6';
 
 const init = () => {
     canvas.width = window.innerWidth * 0.4;
@@ -59,7 +66,7 @@ startBtn.addEventListener('click', () => {
     requestAnimationFrame(gameLoop);
     startBtn.style.visibility = 'hidden';
     nextChord(Tone.now());
-    setInterval(() => nextChord(Tone.now()), 4000);
+    setInterval(() => nextChord(Tone.now()), nextNoteInterval);
 });
 
 let chords = [];
@@ -67,7 +74,9 @@ const nextChord = (now) => {
     const randomRoot = notes[getRandomIntInclusive(0, 11)];
     const randomChord = (Math.round(Math.random())) ? constructMajorTriad(randomRoot) : constructMinorTriad(randomRoot);
     console.log(randomChord);
-    synth.triggerAttackRelease(randomChord.triad, noteLength, now);
+    synth.triggerAttack(randomChord.triad, now);
+    synth.triggerRelease(now + 1);
+    //synth.triggerAttackRelease(randomChord.triad, noteLength, now);
     const note = {
         width: Math.round(quarterNoteIcon.width/30),
         height: Math.round(quarterNoteIcon.height/30),
@@ -108,7 +117,7 @@ const draw = () => {
             chords.splice(index, 1); 
             if (note.type == playerGoal) { player.lives--; }
             console.log('lives:', player.lives, 'score:', player.score);
-            livesDiv.setAttribute('value', player.lives);
+            document.getElementById('lives').innerText = player.lives;
         }
         ctx.drawImage(quarterNoteIcon, note.position.x, note.position.y, note.width, note.height);
     });

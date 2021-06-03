@@ -11,29 +11,39 @@
 <body>
     <main>
         <div id="welcomeHeader">Welcome to Interval Champions!</div>
-        <div id="tutorial">Choose a specific interval you want to practice.<br>
+        <button id="tutorialBtn">How to play</button>
+        <div class="menu" id="tutorial">
             The intervals will play and come falling from the sky as a note.<br>
             You then have to collect as many correct notes as you can.<br><br>
+            You have 3 lives, and you lose a life if you collect a wrong note or if you miss a correct note.<br><br>
             Example: You have chosen minor thirds. Minor and major thirds will be played at random.<br>
-            You have to collect only the ones that are in fact minor thirds.</div>
-        <div id="intervals">
-            <div>Minor 2nd</div>
-            <div>Major 2nd</div>
-            <div>Minor 3rd</div>
-            <div>Major 3rd</div>
-            <div>Perfect 4th</div>
-            <div>Perfect 5th</div>
-            <div>Minor 6th</div>
-            <div>Major 6th</div>
-            <div>Minor 7th</div>
-            <div>Major 7th</div>
-            <div>Minor Chord</div>
-            <div>Major Chord</div>
+            You have to collect only the ones that are in fact minor thirds.
+            <br><br>
+            <button data-menu='tutorial' class="backBtn">Back</button>
         </div>
-        <button id="nextBtn">Next</button>
+        <div class="menu active" id="intervals">
+            <h3>Choose a specific interval you want to practice.</h3>
+            <button data-interval='minor2nd' class="interval">Minor 2nd</button>
+            <button data-interval='major2nd' class="interval">Major 2nd</button>
+            <button data-interval='minor3rd' class="interval">Minor 3rd</button>
+            <button data-interval='major3nd' class="interval">Major 3rd</button>
+            <button data-interval='perfect4th' class="interval">Perfect 4th</button>
+            <button data-interval='perfect5th' class="interval">Perfect 5th</button>
+            <button data-interval='minor6th' class="interval">Minor 6th</button>
+            <button data-interval='major6th' class="interval">Major 6th</button>
+            <button data-interval='minor7th' class="interval">Minor 7th</button>
+            <button data-interval='major7th' class="interval">Major 7th</button>
+            <button data-interval='minorChord' class="interval">Minor Chord</button>
+            <button data-interval='majorChord' class="interval">Major Chord</button>
+        </div>
+        <div class="menu" id="options">
+            <h3>Select your preferred instrument</h3>
+            
+            <button data-menu='options' class="backBtn">Back</button>
+        </div>
         <div id="game">
-            <div id="score">0</div>
-            <div id="lives">3</div>
+            <div>Score: <span id="score">0</span></div>
+            <div>Lives: <span id="lives">3</span></div>
             <canvas id="canvas"></canvas>
         </div>
         <div class="btn">
@@ -42,6 +52,7 @@
     </main>
     
     <script src="https://unpkg.com/tone"></script>
+    <script src="Tonejs-Instruments.js"></script>
     <script src="music.js"></script>
     <script src="game.js"></script>
     <script src="index.js"></script>
