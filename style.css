@@ -21,7 +21,7 @@ main {
 }
 
 #game {
-    visibility: hidden;
+    display: none;
     text-align: center;
 }
 
@@ -33,7 +33,6 @@ canvas {
 #welcomeHeader {
     color: orange;
     font-size: 2em;
-   /*  font-family: 'Courier New', Courier, monospace; */
     margin: auto;
 }
 
@@ -55,7 +54,6 @@ canvas {
 #tutorial {
     padding: 5px;
     margin: 5px;
-
 }
 
 .menu {
@@ -89,4 +87,14 @@ canvas {
 .menu button:hover, #tutorialBtn:hover {
     filter: brightness(0.8);
     cursor: pointer;
+}
+
+.instrument-grid button {
+    height: 100px;
+    width: 80px;
+}
+
+.instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 }

@@ -4,6 +4,7 @@ const intervals = document.getElementById('intervals');
 const backBtns = document.querySelectorAll('.backBtn');
 const options = document.getElementById('options');
 const intervalBtns = document.querySelectorAll('.interval');
+const instrumentBtns = document.querySelectorAll('.instrument');
 
 function displayTutorial() {
     tutorialBtn.style.display = 'none';
@@ -35,6 +36,11 @@ function displayOptionsMenu() {
     options.classList.add('active');
 }
 
+function setInstrument(target) {
+    const instrument = target.dataset.instrument;
+    console.log(instrument);
+    setPlayerInstrument(instrument);
+}
 
 tutorialBtn.onclick = displayTutorial;
 backBtns.onclick = goBack;
@@ -47,6 +53,14 @@ intervalBtns.forEach(btn => {
     btn.addEventListener('click', ({target}) => {
         setPlayerInterval(target);
         displayOptionsMenu();
+    });
+});
+
+instrumentBtns.forEach(btn => {
+    btn.style.background = `gold url('./img/${btn.dataset.instrument}.svg') no-repeat`;
+    btn.addEventListener('click', ({target}) => {
+        setInstrument(target);
+        
     });
 });
 

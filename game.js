@@ -6,7 +6,9 @@ const ctx = canvas.getContext('2d');
 const startBtn = document.getElementById('startGameBtn');
 
 // player should choose what to practice - defaulting to minor
-let playerGoal, instrument;
+let playerGoal;
+let synth;
+Tone.Master.volume.value = '-6';
 
 // player and note icons
 const playerIcon = new Image();
@@ -17,8 +19,8 @@ quarterNoteIcon.src = './img/quarter_note.png';
 // synth
 //const synth = new Tone.PolySynth().toDestination();
 const noteSpeed = 1;
-const noteLength = '2n';
-const nextNoteInterval = 3000; 
+const noteLength = 3.5;
+const nextNoteInterval = 5000;
 
 // player settings
 const MOVEMENT_SPEED = 3;
@@ -30,12 +32,19 @@ let player = {};
 // object holding keypresses
 let keyPresses = {};
 
-const synth = SampleLibrary.load({
-    instruments: 'piano',
+function setPlayerInstrument(instrument) {
+    synth = SampleLibrary.load({
+        instruments: instrument,
+        minify: true
+    });
+    synth.toDestination();
+}
+
+/* const synth = SampleLibrary.load({
+    instruments: instrument,
     minify: true
-});
-synth.toDestination();
-Tone.Master.volume.value = '-6';
+}); */
+
 
 const init = () => {
     canvas.width = window.innerWidth * 0.4;
@@ -62,7 +71,7 @@ window.onresize = () => {
 }
 
 startBtn.addEventListener('click', () => {
-    document.getElementById('game').style.visibility = 'visible';
+    document.getElementById('game').style.display = 'block';
     requestAnimationFrame(gameLoop);
     startBtn.style.visibility = 'hidden';
     nextChord(Tone.now());
@@ -74,9 +83,9 @@ const nextChord = (now) => {
     const randomRoot = notes[getRandomIntInclusive(0, 11)];
     const randomChord = (Math.round(Math.random())) ? constructMajorTriad(randomRoot) : constructMinorTriad(randomRoot);
     console.log(randomChord);
-    synth.triggerAttack(randomChord.triad, now);
-    synth.triggerRelease(now + 1);
-    //synth.triggerAttackRelease(randomChord.triad, noteLength, now);
+    /* synth.triggerAttack(randomChord.triad, now);
+    synth.triggerRelease(now + 1); */
+    synth.triggerAttackRelease(randomChord.triad, noteLength, now);
     const note = {
         width: Math.round(quarterNoteIcon.width/30),
         height: Math.round(quarterNoteIcon.height/30),
