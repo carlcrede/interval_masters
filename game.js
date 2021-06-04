@@ -4,22 +4,24 @@ const ctx = canvas.getContext('2d');
 
 // start game button & score + lives counters
 const startBtn = document.getElementById('startGameBtn');
+let isRunning = true;
 
-// player should choose what to practice - defaulting to minor
+// player should choose what interval to practice - or maj/min 
 let playerGoal;
-let synth;
+let playerInstrument;
+let playerPlaybackMode;
 Tone.Master.volume.value = '-6';
 
 // player and note icons
 const playerIcon = new Image();
 const quarterNoteIcon = new Image();
-playerIcon.src = './img/playerIcon.png'
+//playerIcon.src = './img/playerIcon.png'
 quarterNoteIcon.src = './img/quarter_note.png';
 
 // synth
 //const synth = new Tone.PolySynth().toDestination();
 const noteSpeed = 1;
-const noteLength = 3.5;
+const noteLength = 3;
 const nextNoteInterval = 5000;
 
 // player settings
@@ -32,19 +34,17 @@ let player = {};
 // object holding keypresses
 let keyPresses = {};
 
+const instruments = SampleLibrary.load({
+    instruments: ['piano', 'violin', 'guitar-acoustic', 'guitar-electric', 'saxophone', 'flute', 'harp'],
+    minify: false
+});
+
 function setPlayerInstrument(instrument) {
-    synth = SampleLibrary.load({
-        instruments: instrument,
-        minify: true
-    });
-    synth.toDestination();
+    playerIcon.src = `./img/${instrument}.svg`;
+    console.log(playerIcon);
+    playerInstrument = instrument; 
+    instruments[instrument].toDestination();
 }
-
-/* const synth = SampleLibrary.load({
-    instruments: instrument,
-    minify: true
-}); */
-
 
 const init = () => {
     canvas.width = window.innerWidth * 0.4;
@@ -70,22 +70,63 @@ window.onresize = () => {
     canvas.height = canvas.width * 0.6;
 }
 
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener('click', async() => {
+    await Tone.start();
+    startBtn.style.display = 'none';
     document.getElementById('game').style.display = 'block';
     requestAnimationFrame(gameLoop);
     startBtn.style.visibility = 'hidden';
     nextChord(Tone.now());
-    setInterval(() => nextChord(Tone.now()), nextNoteInterval);
+    let intervalId = setInterval(() => nextChord(Tone.now()), nextNoteInterval);
 });
+
+const nextRandomInterval = () => {
+    const x = Object.keys(intervals);
+
+    switch (playerGoal) {
+        case 'm2':    
+        case 'M2':
+            return ['m2', 'M2'][Math.round(Math.random())];
+        case 'm3':
+        case 'M3':
+            return x[getRandomIntInclusive(2, 3)];
+        case 'P4':
+        case 'P5':
+            return x[getRandomIntInclusive(4, 5)];
+        case 'm6':
+        case 'M6':
+            return x[getRandomIntInclusive(6, 7)];
+        case 'm7':
+        case 'M7':
+            return x[getRandomIntInclusive(8, 9)];
+    }
+}
+
+const nextRandomTriad = () => {
+    return ['m3', 'M3'][getRandomIntInclusive(0, 1)];
+}
 
 let chords = [];
 const nextChord = (now) => {
     const randomRoot = notes[getRandomIntInclusive(0, 11)];
-    const randomChord = (Math.round(Math.random())) ? constructMajorTriad(randomRoot) : constructMinorTriad(randomRoot);
-    console.log(randomChord);
-    /* synth.triggerAttack(randomChord.triad, now);
-    synth.triggerRelease(now + 1); */
-    synth.triggerAttackRelease(randomChord.triad, noteLength, now);
+    const randomIntervalOrTriad = (playerGoal.toLowerCase() == 'm') ? nextRandomTriad() : nextRandomInterval();
+    const randomChord = (playerGoal.toLowerCase() == 'm') ? constructTriad(randomRoot, randomIntervalOrTriad) : constructInterval(randomRoot, randomIntervalOrTriad);
+    console.log('Chord:', randomChord.tones, randomChord.interval);
+
+    if (playerPlaybackMode == 'harmonic') {
+        instruments[playerInstrument].triggerAttackRelease(randomChord.tones, noteLength, now);
+    } else {
+        if (randomChord.tones.length == 3) {
+            console.log('Melodic, minor/major');
+            instruments[playerInstrument].triggerAttackRelease(randomChord.tones[0], noteLength, now);
+            instruments[playerInstrument].triggerAttackRelease(randomChord.tones[1], noteLength, now + 0.5);
+            instruments[playerInstrument].triggerAttackRelease(randomChord.tones[2], noteLength, now + 1);
+        } else {
+            instruments[playerInstrument].triggerAttackRelease(randomChord.tones[0], noteLength, now);
+            instruments[playerInstrument].triggerAttackRelease(randomChord.tones[1], noteLength, now + 0.5);
+        }
+    }
+
     const note = {
         width: Math.round(quarterNoteIcon.width/30),
         height: Math.round(quarterNoteIcon.height/30),
@@ -94,7 +135,7 @@ const nextChord = (now) => {
             y: 0
         },
         speed: noteSpeed,
-        type: randomChord.type
+        type: randomChord.interval
     }
     chords.unshift(note);
 }
@@ -120,7 +161,7 @@ const moveNotes = () => {
 }
 
 const draw = () => {
-    ctx.drawImage(playerIcon, player.position.x, canvas.height - PLAYER_HEIGHT);
+    ctx.drawImage(playerIcon, player.position.x, canvas.height - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
     chords.forEach((note, index) => {
         if ((note.position.y + note.height) >= canvas.height) { 
             chords.splice(index, 1); 
@@ -162,7 +203,6 @@ const handleUserInput = () => {
 }
 
 const gameLoop = () => {
-
     clearCanvas();
 
     handleUserInput();
@@ -179,7 +219,6 @@ const gameLoop = () => {
 const clearCanvas = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);

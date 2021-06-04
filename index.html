@@ -23,20 +23,27 @@
         </div>
         <div class="menu active" id="intervals">
             <h3>Choose a specific interval you want to practice.</h3>
-            <button data-interval='minor2nd' class="interval">Minor 2nd</button>
-            <button data-interval='major2nd' class="interval">Major 2nd</button>
-            <button data-interval='minor3rd' class="interval">Minor 3rd</button>
-            <button data-interval='major3nd' class="interval">Major 3rd</button>
-            <button data-interval='perfect4th' class="interval">Perfect 4th</button>
-            <button data-interval='perfect5th' class="interval">Perfect 5th</button>
-            <button data-interval='minor6th' class="interval">Minor 6th</button>
-            <button data-interval='major6th' class="interval">Major 6th</button>
-            <button data-interval='minor7th' class="interval">Minor 7th</button>
-            <button data-interval='major7th' class="interval">Major 7th</button>
-            <button data-interval='minorChord' class="interval">Minor Chord</button>
-            <button data-interval='majorChord' class="interval">Major Chord</button>
+            <button data-interval='m2' class="interval">Minor 2nd</button>
+            <button data-interval='M2' class="interval">Major 2nd</button>
+            <button data-interval='m3' class="interval">Minor 3rd</button>
+            <button data-interval='M3' class="interval">Major 3rd</button>
+            <button data-interval='P4' class="interval">Perfect 4th</button>
+            <button data-interval='P5' class="interval">Perfect 5th</button>
+            <button data-interval='m6' class="interval">Minor 6th</button>
+            <button data-interval='M6' class="interval">Major 6th</button>
+            <button data-interval='m7' class="interval">Minor 7th</button>
+            <button data-interval='M7' class="interval">Major 7th</button>
+            <button data-interval='m' class="interval">Minor Chord</button>
+            <button data-interval='M' class="interval">Major Chord</button>
         </div>
-        <div class="menu" id="options">
+        <div class="menu" id="melodicOrHarmonic">
+            <h3>Do you want to practice melodic or harmonic intervals?</h3>
+            <button class="melodicOrHarmonic" data-melodicOrHarmonic="melodic">Melodic</button>
+            <button class="melodicOrHarmonic" data-melodicOrHarmonic="harmonic">Harmonic</button>
+            <br>
+            <button data-menu='melodicOrHarmonic' class="backBtn">Back</button>
+        </div>
+        <div class="menu" id="instrumentChoice">
             <h3>Select your preferred instrument</h3>
             <div class="instrument-grid">
                 <div>
@@ -69,16 +76,21 @@
                 </div>
             </div>
             <br>
-            <button data-menu='options' class="backBtn">Back</button>
+            <button data-menu='instrument' class="backBtn">Back</button>
+        </div>
+        <div class="menu" id="reviewChoices">
+            <h3>Review your choices. Go back if you need to change something.</h3>
+            <h3>What you want to practice: <span id="intervalChoice"></span></h3>
+            <h3>Melodic or harmonic mode: <span id="intervalModeChoice"></span></h3>
+            <h3>Preferred instrument: <span id="instrument"></span></h3>
+            <button id="startGameBtn">Start Game</button>
         </div>
         <div id="game">
             <div>Score: <span id="score">0</span></div>
             <div>Lives: <span id="lives">3</span></div>
             <canvas id="canvas"></canvas>
         </div>
-        <div class="btn">
-            <button id="startGameBtn">Start Game</button>
-        </div>
+        
     </main>
     
     <script src="https://unpkg.com/tone"></script>
