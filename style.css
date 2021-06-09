@@ -92,6 +92,9 @@ canvas {
 .instrument-grid button {
     height: 100px;
     width: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .instrument-grid {

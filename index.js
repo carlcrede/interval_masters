@@ -105,7 +105,7 @@ melodicOrHarmonicBtns.forEach(btn => {
 });
 
 instrumentElementBtns.forEach(btn => {
-    btn.style.background = `gold url('./img/${btn.dataset.instrument}.svg') no-repeat`;
+    btn.style.backgroundImage = `url('./img/${btn.dataset.instrument}.svg')`;
     btn.addEventListener('click', ({target}) => {
         setInstrument(target);
         displayChoicesMenu();

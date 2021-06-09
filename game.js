@@ -34,14 +34,19 @@ let player = {};
 // object holding keypresses
 let keyPresses = {};
 
-const instruments = SampleLibrary.load({
-    instruments: ['piano', 'violin', 'guitar-acoustic', 'guitar-electric', 'saxophone', 'flute', 'harp'],
+/* const instruments = SampleLibrary.load({
+    instruments: ['piano', 'violin', 'guitar-acoustic', 'guitar-electric', 'saxophone', 'flute', 'harp', ''],
     minify: false
-});
+}); */
+let instruments;
 
 function setPlayerInstrument(instrument) {
     playerIcon.src = `./img/${instrument}.svg`;
     console.log(playerIcon);
+    instruments = SampleLibrary.load({
+        instruments: [instrument],
+        minify: false
+    });
     playerInstrument = instrument; 
     instruments[instrument].toDestination();
 }
@@ -224,4 +229,4 @@ function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
-  }
+}
