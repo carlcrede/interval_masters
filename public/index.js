@@ -132,8 +132,8 @@ const Index = (() => {
     instrumentElementBtns.forEach(btn => {
         btn.style.backgroundImage = `url('./img/${btn.dataset.instrument}.svg')`;
         btn.addEventListener('click', async ({target}) => {
-            await setInstrument(target);
-            displayChoicesMenu();
+            setInstrument(target).then(displayChoicesMenu());
+            
         });
     });
     
