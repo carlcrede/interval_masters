@@ -87,7 +87,7 @@ const Index = (() => {
     function displayChoicesMenu() {
         document.getElementById('intervalChoice').innerText = intervalAbbreviationSchema[Game.getPlayerGoal()];
         document.getElementById('intervalModeChoice').innerText = Game.getPlayerMode();
-        document.getElementById('instrument').innerText = Game.getPlayerInstrument();
+        //document.getElementById('instrument').innerText = Game.getPlayerInstrument();
         instrumentElement.classList.remove('active');
         reviewChoices.classList.add('active');
     }
@@ -105,6 +105,7 @@ const Index = (() => {
     
     async function setInstrument(target) {
         const instrument = target.dataset.instrument;
+        document.getElementById('instrument').innerText = instrument;
         await Game.setPlayerInstrument(instrument);
     }
     
@@ -132,8 +133,8 @@ const Index = (() => {
     instrumentElementBtns.forEach(btn => {
         btn.style.backgroundImage = `url('./img/${btn.dataset.instrument}.svg')`;
         btn.addEventListener('click', async ({target}) => {
-            setInstrument(target).then(displayChoicesMenu());
-            
+            await setInstrument(target);
+            displayChoicesMenu();
         });
     });
     
