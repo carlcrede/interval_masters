@@ -247,7 +247,7 @@ const Game = (() => {
         playerIcon.src = `./img/${instrument}.svg`;
         instruments = await SampleLibrary.load({
             instruments: [instrument],
-            minify: false
+            minify: true
         });
         playerInstrument = instrument; 
         instruments[instrument].toDestination();
