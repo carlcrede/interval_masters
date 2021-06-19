@@ -39,6 +39,7 @@ const Index = (() => {
         game.style.display = 'none';
         document.getElementById('game-over-score').innerText = Game.getPlayer().score;
         gameOverElement.classList.add('active');
+        Game.updateScoreAndLives();
     }
 
     function restartGame () {

@@ -66,10 +66,14 @@ const Game = (() => {
         player.score = 0;
         player.lives = 3;
         chords = [];
-        
         ctx.fillStyle = 'black';
         ctx.font = '50px Libre Baskerville';
         ctx.fillText('Game Over', canvas.width/2 - 145, 125);
+    }
+
+    const updateScoreAndLives = () => {
+        document.getElementById('score').innerText = player.score;
+        document.getElementById('lives').innerText = player.lives;
     }
     
     const nextRandomInterval = () => {
@@ -99,7 +103,6 @@ const Game = (() => {
     const nextChord = (now) => {
         const randomRoot = Music.notes[getRandomIntInclusive(0, 11)];
         const randomIntervalOrTriad = nextRandomInterval();
-        //const randomChord = (playerGoal.toLowerCase() == 'm') ? constructTriad(randomRoot, randomIntervalOrTriad) : Music.constructInterval(randomRoot, randomIntervalOrTriad);
         const randomChord = Music.constructIntervalOrTriad(playerGoal, randomRoot, randomIntervalOrTriad);
         console.log('Chord:', randomChord.tones, randomChord.interval);
         if (playerPlaybackMode == 'harmonic') {
@@ -156,6 +159,7 @@ const Game = (() => {
         drawBackground();
         drawPlayer();
         drawNotes();
+        updateScoreAndLives();
     }
     
     const drawNotes = () => {
@@ -182,12 +186,9 @@ const Game = (() => {
                 chords.splice(index, 1);
                 if (note.type == playerGoal) { 
                     player.score++;
-                    document.getElementById('score').innerText = player.score;
                 } else { 
                     player.lives--;
-                    document.getElementById('lives').innerText = player.lives;
                 }
-                console.log('lives:', player.lives, 'score:', player.score);
             }
 
             if ((note.position.y + note.height) >= canvas.height) { 
@@ -197,9 +198,6 @@ const Game = (() => {
                 } else {
                     player.score++;
                 }
-                console.log('lives:', player.lives, 'score:', player.score);
-                document.getElementById('lives').innerText = player.lives;
-                document.getElementById('score').innerText = player.score;
             }
         });
     }
@@ -282,6 +280,6 @@ const Game = (() => {
     return {
         startGame, setPlayerInstrument, getPlayerInstrument, 
         setPlayerGoal, getPlayerGoal, getPlayerMode, setPlayerMode,
-        getPlayer
+        getPlayer, updateScoreAndLives
     }
 })();
