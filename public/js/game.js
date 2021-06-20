@@ -8,9 +8,6 @@ const Game = (() => {
     background.src = './img/background.png';
     quarterNoteIcon.src = './img/quarter_note.png';
     
-    let playerGoal;
-    let playerInstrument;
-    let playerPlaybackMode;
     Tone.Master.volume.value = '-6';
     
     const noteSpeed = 1;
@@ -42,7 +39,10 @@ const Game = (() => {
             },
             speed: MOVEMENT_SPEED,
             lives: PLAYER_LIVES,
-            score: 0
+            score: 0,
+            goal: '',
+            instrument: '',
+            playBackMode: ''
         };
     }
     
@@ -66,9 +66,6 @@ const Game = (() => {
         player.score = 0;
         player.lives = 3;
         chords = [];
-        ctx.fillStyle = 'black';
-        ctx.font = '50px Libre Baskerville';
-        ctx.fillText('Game Over', canvas.width/2 - 145, 125);
     }
 
     const updateScoreAndLives = () => {
@@ -76,46 +73,17 @@ const Game = (() => {
         document.getElementById('lives').innerText = player.lives;
     }
     
-    const nextRandomInterval = () => {
-        switch (playerGoal) {
-            case 'm':
-            case 'M':
-                return ['m', 'M'][getRandomIntInclusive(0, 1)];
-            case 'm2':    
-            case 'M2':
-                return ['m2', 'M2'][getRandomIntInclusive(0, 1)];
-            case 'm3':
-            case 'M3':
-                return ['m3', 'M3'][getRandomIntInclusive(0, 1)];
-            case 'P4':
-            case 'P5':
-                return ['P4', 'P5'][getRandomIntInclusive(0, 1)];
-            case 'm6':
-            case 'M6':
-                return ['m6', 'M6'][getRandomIntInclusive(0, 1)];
-            case 'm7':
-            case 'M7':
-                return ['m7', 'M7'][getRandomIntInclusive(0, 1)];
-        }
-    }
-    
     let chords = [];
     const nextChord = (now) => {
-        const randomRoot = Music.notes[getRandomIntInclusive(0, 11)];
-        const randomIntervalOrTriad = nextRandomInterval();
-        const randomChord = Music.constructIntervalOrTriad(playerGoal, randomRoot, randomIntervalOrTriad);
+        const randomChord = Music.constructIntervalOrTriad(player.goal);
         console.log('Chord:', randomChord.tones, randomChord.interval);
-        if (playerPlaybackMode == 'harmonic') {
-            instruments[playerInstrument].triggerAttackRelease(randomChord.tones, noteLength, now);
+        if (player.playBackMode == 'harmonic') {
+            instruments[player.instrument].triggerAttackRelease(randomChord.tones, noteLength, now);
         } else {
-            if (randomChord.tones.length == 3) {
-                instruments[playerInstrument].triggerAttackRelease(randomChord.tones[0], noteLength, now);
-                instruments[playerInstrument].triggerAttackRelease(randomChord.tones[1], noteLength, now + 0.5);
-                instruments[playerInstrument].triggerAttackRelease(randomChord.tones[2], noteLength, now + 1);
-            } else {
-                instruments[playerInstrument].triggerAttackRelease(randomChord.tones[0], noteLength, now);
-                instruments[playerInstrument].triggerAttackRelease(randomChord.tones[1], noteLength, now + 0.5);
-            }
+            randomChord.tones.forEach((tone, index) => {
+                instruments[player.instrument].triggerAttackRelease(tone, noteLength, now);
+                now += 0.5;
+            });
         }
     
         const note = buildNote(randomChord);
@@ -184,7 +152,7 @@ const Game = (() => {
                 note.position.y < player.position.y + player.height && note.position.y + note.height > player.position.y) {
                 // The objects are touching
                 chords.splice(index, 1);
-                if (note.type == playerGoal) { 
+                if (note.type == player.goal) { 
                     player.score++;
                 } else { 
                     player.lives--;
@@ -193,7 +161,7 @@ const Game = (() => {
 
             if ((note.position.y + note.height) >= canvas.height) { 
                 chords.splice(index, 1); 
-                if (note.type == playerGoal) { 
+                if (note.type == player.goal) { 
                     player.lives--; 
                 } else {
                     player.score++;
@@ -226,8 +194,7 @@ const Game = (() => {
     
         if (player.lives == 0) {
             clearInterval(intervalId);
-            gameOver();
-            setTimeout(() => Index.gameOver(), 2500);
+            Index.gameOver(ctx);
         } else {
             requestAnimationFrame(gameLoop);
         }
@@ -236,12 +203,6 @@ const Game = (() => {
     const clearCanvas = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-    
-    function getRandomIntInclusive(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
 
     async function setPlayerInstrument(instrument) {
         playerIcon.src = `./img/${instrument}.svg`;
@@ -249,7 +210,7 @@ const Game = (() => {
             instruments: [instrument],
             minify: true
         });
-        playerInstrument = instrument; 
+        player.instrument = instrument; 
         instruments[instrument].toDestination();
     }
 
@@ -257,29 +218,8 @@ const Game = (() => {
         return player;
     }
 
-    function getPlayerInstrument () {
-        return playerInstrument;
-    }
-
-    function setPlayerGoal (goal) {
-        playerGoal = goal;
-    }
-
-    function getPlayerGoal () {
-        return playerGoal;
-    }
-
-    function getPlayerMode () {
-        return playerPlaybackMode;
-    }
-
-    function setPlayerMode (mode) {
-        playerPlaybackMode = mode;
-    }
-
     return {
-        startGame, setPlayerInstrument, getPlayerInstrument, 
-        setPlayerGoal, getPlayerGoal, getPlayerMode, setPlayerMode,
+        startGame, gameOver, setPlayerInstrument,
         getPlayer, updateScoreAndLives
     }
 })();

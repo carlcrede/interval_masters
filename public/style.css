@@ -31,9 +31,16 @@ canvas {
 }
 
 #welcomeHeader {
-    color: orange;
-    font-size: 2em;
     margin: auto;
+}
+
+#welcome {
+    font-size: 2em;
+    color: orange;
+}
+
+#welcome-description {
+    font-size: 1em;
 }
 
 #nextBtn {

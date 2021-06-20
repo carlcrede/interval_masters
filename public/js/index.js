@@ -35,11 +35,17 @@ const Index = (() => {
         Game.startGame();
     }
 
-    function gameOver () {
-        game.style.display = 'none';
-        document.getElementById('game-over-score').innerText = Game.getPlayer().score;
-        gameOverElement.classList.add('active');
-        Game.updateScoreAndLives();
+    function gameOver (ctx) {
+        ctx.fillStyle = 'black';
+        ctx.font = '50px Libre Baskerville';
+        ctx.fillText('Game Over', canvas.width/2 - 145, 125);
+
+        setTimeout(() => {
+            game.style.display = 'none';
+            document.getElementById('game-over-score').innerText = Game.getPlayer().score;
+            gameOverElement.classList.add('active');
+            Game.gameOver();
+        }, 2500);
     }
 
     function restartGame () {
@@ -76,7 +82,7 @@ const Index = (() => {
     function setPlayerGoal(target) {
         const chosenInterval = target.dataset.interval;
         document.getElementById('display-interval').innerText = intervalAbbreviationSchema[chosenInterval];
-        Game.setPlayerGoal(chosenInterval);
+        Game.getPlayer().goal = chosenInterval;
     }
     
     function displayInstrumentsMenu() {
@@ -85,9 +91,8 @@ const Index = (() => {
     }
     
     function displayChoicesMenu() {
-        document.getElementById('intervalChoice').innerText = intervalAbbreviationSchema[Game.getPlayerGoal()];
-        document.getElementById('intervalModeChoice').innerText = Game.getPlayerMode();
-        //document.getElementById('instrument').innerText = Game.getPlayerInstrument();
+        document.getElementById('intervalChoice').innerText = intervalAbbreviationSchema[Game.getPlayer().goal];
+        document.getElementById('intervalModeChoice').innerText = Game.getPlayer().playBackMode;
         instrumentElement.classList.remove('active');
         reviewChoices.classList.add('active');
     }
@@ -99,14 +104,15 @@ const Index = (() => {
     }
     
     function setMelodicOrHarmonic(target) {
-        const choice = target.dataset.melodicorharmonic;
-        Game.setPlayerMode(choice);
+        const mode = target.dataset.melodicorharmonic;
+        Game.getPlayer().playBackMode = mode;
     }
     
     async function setInstrument(target) {
         const instrument = target.dataset.instrument;
         document.getElementById('instrument').innerText = instrument;
         await Game.setPlayerInstrument(instrument);
+        displayChoicesMenu();
     }
     
     tutorialBtn.onclick = displayTutorial;
@@ -134,7 +140,6 @@ const Index = (() => {
         btn.style.backgroundImage = `url('./img/${btn.dataset.instrument}.svg')`;
         btn.addEventListener('click', async ({target}) => {
             await setInstrument(target);
-            displayChoicesMenu();
         });
     });
     
