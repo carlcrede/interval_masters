@@ -20,11 +20,6 @@ main {
     text-align: center;
 }
 
-/* main {
-    display: flex;
-    justify-content: center;
-} */
-
 canvas {
     border: 1px solid black;
     background-color: aliceblue;
