@@ -43,6 +43,8 @@ const Index = (() => {
         setTimeout(() => {
             game.style.display = 'none';
             document.getElementById('game-over-score').innerText = Game.getPlayer().score;
+            document.getElementById('correctNotes').innerText = Game.getPlayer().correctNotes;
+            document.getElementById('avoidedNotes').innerText = Game.getPlayer().avoidedNotes;
             gameOverElement.classList.add('active');
             Game.gameOver();
         }, 2500);
