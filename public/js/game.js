@@ -56,6 +56,7 @@ const Game = (() => {
     }
     
     const startGame = async () => {
+        await Tone.Buffer.loaded();
         await Tone.start();
         requestAnimationFrame(gameLoop);
         nextChord(Tone.now());
@@ -210,7 +211,7 @@ const Game = (() => {
             instruments: playerInstrument,
             minify: true
         });
-        Tone.Buffer.loaded().then(callback());
+        //Tone.Buffer.loaded().then(callback());
         instrument.toDestination();
     }
 
