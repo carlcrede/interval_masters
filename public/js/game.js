@@ -213,6 +213,7 @@ const Game = (() => {
         });
         //Tone.Buffer.loaded().then(callback());
         instrument.toDestination();
+        callback();
     }
 
     function getPlayer () {
