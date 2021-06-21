@@ -24,7 +24,9 @@ const Game = (() => {
     // object holding keypresses
     let keyPresses = {};
     
-    let instruments;
+    let instrument;
+    let chords = [];
+    let intervalId;
     
     const init = () => {
         canvas.width = window.innerWidth * 0.4;
@@ -53,8 +55,6 @@ const Game = (() => {
         canvas.height = canvas.width * 0.6;
     }
     
-    let intervalId;
-    
     const startGame = async () => {
         await Tone.start();
         requestAnimationFrame(gameLoop);
@@ -73,15 +73,14 @@ const Game = (() => {
         document.getElementById('lives').innerText = player.lives;
     }
     
-    let chords = [];
     const nextChord = (now) => {
         const randomChord = Music.constructIntervalOrTriad(player.goal);
         console.log('Chord:', randomChord.tones, randomChord.interval);
         if (player.playBackMode == 'harmonic') {
-            instruments[player.instrument].triggerAttackRelease(randomChord.tones, noteLength, now);
+            instrument.triggerAttackRelease(randomChord.tones, noteLength, now);
         } else {
             randomChord.tones.forEach((tone, index) => {
-                instruments[player.instrument].triggerAttackRelease(tone, noteLength, now);
+                instrument.triggerAttackRelease(tone, noteLength, now);
                 now += 0.5;
             });
         }
@@ -204,14 +203,15 @@ const Game = (() => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    async function setPlayerInstrument(instrument) {
-        playerIcon.src = `./img/${instrument}.svg`;
-        instruments = await SampleLibrary.load({
-            instruments: [instrument],
+    async function setPlayerInstrument(playerInstrument, callback) {
+        playerIcon.src = `./img/${playerInstrument}.svg`;
+        player.instrument = playerInstrument;
+        instrument = await SampleLibrary.load({
+            instruments: playerInstrument,
             minify: true
         });
-        player.instrument = instrument; 
-        instruments[instrument].toDestination();
+        Tone.Buffer.loaded().then(callback());
+        instrument.toDestination();
     }
 
     function getPlayer () {

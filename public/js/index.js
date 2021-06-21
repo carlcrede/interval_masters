@@ -111,12 +111,11 @@ const Index = (() => {
     async function setInstrument(target) {
         const instrument = target.dataset.instrument;
         document.getElementById('instrument').innerText = instrument;
-        await Game.setPlayerInstrument(instrument);
-        displayChoicesMenu();
+        await Game.setPlayerInstrument(instrument, displayChoicesMenu);
+        //displayChoicesMenu();
     }
     
     tutorialBtn.onclick = displayTutorial;
-    backBtns.onclick = goBack;
     
     backBtns.forEach(btn => {
         btn.addEventListener('click', ({target}) => goBack(target));
