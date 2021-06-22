@@ -4,6 +4,8 @@ const app = express();
 const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+const cors = require('cors');
+app.use(cors({ origin: 'http://interval-champions.herokuapp.com'}));
 
 const scoreRoute = require('./routes/score.js');
 app.use(scoreRoute.router);

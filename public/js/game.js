@@ -23,7 +23,7 @@ const Game = (() => {
     
     let noteSpeed = 1;
     let noteLength = 1.5;
-    let nextNoteInterval = 5000;
+    let nextNoteInterval = 6000;
     let levelUp = false;
     
     // player settings

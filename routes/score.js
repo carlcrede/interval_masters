@@ -8,8 +8,9 @@ const getHighscores = async () => {
 
 const submitScore = async (data) => {
     const { name, score, goal, correctNotes, avoidedNotes } = data;
+    console.log(score);
     const params = [name, score, goal, correctNotes, avoidedNotes, new Date];
-    const sql = `INSERT INTO scores (player,score,collected,avoided,date) VALUES(?,?,?,?,?)`;
+    const sql = `INSERT INTO scores (player,score,goal,collected,avoided,date) VALUES(?,?,?,?,?,?)`;
     const rows = await query(sql, params);
     return rows;
 }
