@@ -7,6 +7,17 @@ const Game = (() => {
     const background = new Image();
     background.src = './img/background.png';
     quarterNoteIcon.src = './img/quarter_note.png';
+
+    const sounds = {
+        correct: new Howl({
+            src: ['./sound/coin.wav'],
+            volume: 0.1
+        }),
+        wrong: new Howl({
+            src: ['./sound/wrong.mp3'],
+            volume: 0.1
+        })
+    };
     
     Tone.Master.volume.value = '-6';
     
@@ -85,9 +96,15 @@ const Game = (() => {
     const startGame = async () => {
         await Tone.Buffer.loaded();
         await Tone.start();
-        requestAnimationFrame(gameLoop);
-        nextChord(Tone.now());
-        intervalId = setInterval(() => nextChord(Tone.now()), nextNoteInterval);
+
+        drawBackground();
+        drawGetReady();
+
+        setTimeout(() => {
+            requestAnimationFrame(gameLoop);
+            nextChord(Tone.now());
+            intervalId = setInterval(() => nextChord(Tone.now()), nextNoteInterval);
+        }, 3000);
     }
 
     const gameOver = () => {
@@ -140,17 +157,21 @@ const Game = (() => {
                 notes.splice(index, 1);
                 if (note.type == player.goal) { 
                     player.correctNotes++;
+                    sounds.correct.play();
                 } else { 
                     player.lives--;
+                    sounds.wrong.play();
                 }
             }
 
             if ((note.position.y + note.height) >= canvas.height) { 
                 notes.splice(index, 1); 
                 if (note.type == player.goal) { 
-                    player.lives--; 
+                    player.lives--;
+                    sounds.wrong.play();
                 } else {
                     player.avoidedNotes++;
+                    sounds.correct.play();
                 }
             }
         });
@@ -200,9 +221,17 @@ const Game = (() => {
         ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
     }
 
+    const drawGetReady = () => {
+        ctx.fillStyle = 'black';
+        ctx.font = '50px Libre Baskerville';
+        ctx.fillText('Get ready!', canvas.width/2 - 145, 125);
+    }
+
     const drawScoreAndLives = () => {
         document.getElementById('score').innerText = player.score;
         document.getElementById('lives').innerText = player.lives;
+        document.getElementById('display-collected').innerText = player.correctNotes;
+        document.getElementById('display-avoided').innerText = player.avoidedNotes;
     }
 
     /* -------------------------- */

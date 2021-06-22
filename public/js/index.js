@@ -32,6 +32,7 @@ const Index = (() => {
     
     function startGame () {
         reviewChoices.classList.remove('active');
+        document.getElementById('game').style.display = 'block';
         Game.startGame();
     }
 
@@ -114,7 +115,6 @@ const Index = (() => {
         const instrument = target.dataset.instrument;
         document.getElementById('instrument').innerText = instrument;
         await Game.setPlayerInstrument(instrument, displayChoicesMenu);
-        //displayChoicesMenu();
     }
     
     tutorialBtn.onclick = displayTutorial;
@@ -145,7 +145,6 @@ const Index = (() => {
     });
     
     startBtn.addEventListener('click', async() => {
-        document.getElementById('game').style.display = 'block';
         startGame();
     });
 

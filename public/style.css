@@ -117,3 +117,8 @@ canvas {
     display: flex;
     justify-content: space-evenly;
 }
+
+#score-display {
+    display: flex;
+    min-width: 125px;
+}

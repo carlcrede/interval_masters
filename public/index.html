@@ -107,9 +107,13 @@
         <div id="game">
             <canvas id="canvas"></canvas>
             <div id="game-stats">
-                <div>Score: <span id="score">0</span></div>
+                <div id="score-display">
+                    <div>Score: <span id="score">0</span></div>
+                </div>
                 <div>Lives: <span id="lives">3</span></div>
                 <div>Goal: <span id="display-interval"></span></div>
+                <div><span id="display-collected"></span> collected</div>
+                <div><span id="display-avoided"></span> avoided</div>
             </div>
         </div>
         <div class="menu" id="game-over">
@@ -122,6 +126,7 @@
         </div>
     </main>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js" integrity="sha512-L6Z/YtIPQ7eU3BProP34WGU5yIRk7tNHk7vaC2dB1Vy1atz6wl9mCkTPPZ2Rn1qPr+vY2mZ9odZLdGYuaBk7dQ==" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/tone"></script>
     <script src="js/Tonejs-Instruments.js"></script>
     <script src="js/util.js"></script>
