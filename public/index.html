@@ -6,16 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interval Champions</title>
     <link rel="stylesheet" href="style.css">
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <main>
         <div id="welcomeheader">
-            <div id="welcome">Welcome to Interval Champions!</div>
+            <a href="/"><div id="welcome">Welcome to Interval Champions!</div></a>
             <div id="welcome-description">A gamified tool for practicing and nailing those tricky intervals.</div>
         </div>
         <br>
         <button id="tutorialBtn">How to play</button>
+        <button id="highscoreBtn">Highscores</button>
         <div class="menu" id="tutorial">
             1: Select what interval you want to practice.<br>
             2: Then choose melodic or harmonic mode - (melodic = notes are played individually | harmonic = tones are played together).<br>
@@ -28,6 +29,13 @@
             You have to collect only the ones that are in fact minor thirds.
             <br><br>
             <button data-menu='tutorial' class="backBtn">Back</button>
+        </div>
+        <div class="menu" id="highscoreMenu">
+            <h2>The 10 all-time best scores</h2>
+            <div id="highscoreDiv">
+            </div>
+            <br>
+            <button data-menu='highscore' class="backBtn">Back</button>
         </div>
         <div class="menu active" id="intervals">
             <h3>Choose a specific interval you want to practice.</h3>
@@ -123,7 +131,14 @@
             <div><span id="correctNotes"></span> correct notes collected</div><br>
             <div><span id="avoidedNotes"></span> wrong notes avoided</div><br>
             <button id="play-again">Play again</button>
-            <button id="change-options">Change options</button>
+            <button id="change-options">Change options</button><br><br>
+            <form id="submitScoreForm">
+                <div>Submit your result</div>
+                <label for="player"></label>
+                <input id="player" name="player" value="" placeholder="Enter your name" type="text" required>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="submitMessage"></div>
         </div>
     </main>
     

@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
@@ -69,7 +73,7 @@ canvas {
     display: block;
 }
 
-.menu button, #tutorialBtn{
+.menu button, #tutorialBtn, #highscoreBtn {
     text-align: center;
     vertical-align: middle;
     border: 2px solid goldenrod;
@@ -82,13 +86,34 @@ canvas {
     margin: 5px auto;
 }
 
-#tutorialBtn {
+#tutorialBtn, #highscoreBtn {
     width: 8em;
 }
 
-.menu button:hover, #tutorialBtn:hover {
+.menu button:hover, #tutorialBtn:hover, #highscoreBtn:hover {
     filter: brightness(0.8);
     cursor: pointer;
+}
+
+#highscoreMenu {
+    display: none;
+}
+
+#highscoreDiv {
+    display: flex;
+    flex-direction: row;
+    row-gap: 10px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.score {
+    background-color: gold;
+    color: orangered;
+    border-radius: 7px;
+    font-weight: bold;
+    min-width: max-content;
+    padding: .3em
 }
 
 .instrument-grid button {

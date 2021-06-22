@@ -14,7 +14,12 @@ const Index = (() => {
     const gameOverElement = document.getElementById('game-over');
     const playAgainBtn = document.getElementById('play-again');
     const changeOptionsBtn = document.getElementById('change-options');
-    
+    const submitScoreForm = document.getElementById('submitScoreForm');
+    const submitMessage = document.getElementById('submitMessage');
+    const highscoreBtn = document.getElementById('highscoreBtn');
+    const highscoreDiv = document.getElementById('highscoreDiv');
+    const highscoreMenu = document.getElementById('highscoreMenu');
+
     const intervalAbbreviationSchema = {
         M: 'Major chord',
         m: 'Minor chord',
@@ -47,7 +52,6 @@ const Index = (() => {
             document.getElementById('correctNotes').innerText = Game.getPlayer().correctNotes;
             document.getElementById('avoidedNotes').innerText = Game.getPlayer().avoidedNotes;
             gameOverElement.classList.add('active');
-            Game.gameOver();
         }, 2500);
     }
 
@@ -59,6 +63,7 @@ const Index = (() => {
     
     function displayTutorial() {
         tutorialBtn.style.display = 'none';
+        highscoreBtn.style.display = 'none';
         intervals.classList.remove('active');
         tutorial.classList.add('active');
     }
@@ -69,16 +74,23 @@ const Index = (() => {
             tutorial.classList.remove('active');
             intervals.classList.add('active');
             tutorialBtn.style.display = 'block';
+            highscoreBtn.style.display = 'block';
         } else if (menu == 'melodicOrHarmonic') {
             melodicOrHarmonic.classList.remove('active');
             intervals.classList.add('active');
             tutorialBtn.style.display = 'block';
+            highscoreBtn.style.display = 'block';
         } else if (menu == 'instrument') {
             instrumentElement.classList.remove('active');
             melodicOrHarmonic.classList.add('active');
         } else if (menu == 'review') {
             reviewChoices.classList.remove('active');
             instrumentElement.classList.add('active');
+        } else if (menu == 'highscore') {
+            highscoreMenu.style.display = 'none';
+            intervals.classList.add('active');
+            tutorialBtn.style.display = 'block';
+            highscoreBtn.style.display = 'block';
         }
     }
     
@@ -102,6 +114,7 @@ const Index = (() => {
     
     function displayMelodicOrHarmonicMenu() {
         tutorialBtn.style.display = 'none';
+        highscoreBtn.style.display = 'none';
         intervals.classList.remove('active');
         melodicOrHarmonic.classList.add('active');
     }
@@ -109,6 +122,26 @@ const Index = (() => {
     function setMelodicOrHarmonic(target) {
         const mode = target.dataset.melodicorharmonic;
         Game.getPlayer().playBackMode = mode;
+    }
+
+    function displayHighscores(highscores) {
+        Object.values(highscores).forEach((key, index) => {
+            const { id, player, score, goal, collected, avoided, date } = key;
+            if (!$('#' + id).length) {
+                $(highscoreDiv).append(
+                    `<div id=${id} class="score">
+                        ${index+1}. ${player}<br>
+                        ${score} points<br>
+                        ${intervalAbbreviationSchema[goal]}<br>
+                        ${date.split('T')[0]}
+                    </div>`
+                );
+            }
+        });
+        intervals.classList.remove('active');
+        tutorialBtn.style.display = 'none';
+        highscoreBtn.style.display = 'none';
+        highscoreMenu.style.display = 'block';
     }
     
     async function setInstrument(target) {
@@ -155,6 +188,23 @@ const Index = (() => {
         intervals.classList.add('active');
         tutorialBtn.style.display = 'block';
     }
+
+    highscoreBtn.onclick = async () => {
+        const highscores = await Game.getHighScores();
+        console.log(highscores);
+        displayHighscores(highscores);
+    }
+
+    submitScoreForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitScoreForm.style.display = 'none';
+        const playerName = document.getElementById('player').value;
+        const response = await Game.submitScore(playerName);
+        if (response == 200) { 
+            submitMessage.innerText = 'Result submitted';
+            submitMessage.style.display = 'block';
+        }
+    });
 
     return {
         gameOver

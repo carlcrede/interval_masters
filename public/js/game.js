@@ -30,7 +30,7 @@ const Game = (() => {
     const MOVEMENT_SPEED = 3;
     const PLAYER_WIDTH = 43;
     const PLAYER_HEIGHT = 70;
-    const PLAYER_LIVES = 3;
+    const PLAYER_LIVES = 1;
     let player = {};
     
     // object holding keypresses
@@ -88,19 +88,18 @@ const Game = (() => {
         } else if (keyPresses.d || keyPresses.ArrowRight) {
             moveSprite(MOVEMENT_SPEED);
         }
-        if (keyPresses[" "]) {
-            // shoot
-        }
     }
 
     /* --------------------- */
     
     const startGame = async () => {
+        resetGame();
         await Tone.Buffer.loaded();
         await Tone.start();
 
         drawBackground();
         drawText('Get ready!');
+        drawPlayer();
 
         setTimeout(() => {
             requestAnimationFrame(gameLoop);
@@ -109,9 +108,9 @@ const Game = (() => {
         }, 3000);
     }
 
-    const gameOver = () => {
+    const resetGame = () => {
         player.score = 0;
-        player.lives = 3;
+        player.lives = PLAYER_LIVES;
         player.correctNotes = 0;
         player.avoidedNotes = 0;
         nextNoteInterval = 5000;
@@ -244,8 +243,30 @@ const Game = (() => {
 
         if (levelUp) {
             drawText('LEVEL UP');
-            //ctx.fillText('LEVEL UP', canvas.width/2 - 130, 125, canvas.width);
         }
+    }
+
+    /* -------------------------- */
+
+    /*////////////
+    //    DB    //
+    ////////////*/
+
+    const submitScore = async (playerName) => {
+        player.name = playerName;
+        const data = player;
+        const response = await fetch('/scores', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        return response.status;
+    }
+
+    const getHighScores = async () => {
+        const response = await fetch('/scores');
+        const data = await response.json();
+        return data;
     }
 
     /* -------------------------- */
@@ -297,7 +318,7 @@ const Game = (() => {
     }
 
     return {
-        startGame, gameOver, setPlayerInstrument,
-        getPlayer, drawScoreAndLives
+        startGame, resetGame, setPlayerInstrument,
+        getPlayer, drawScoreAndLives, submitScore, getHighScores
     }
 })();
