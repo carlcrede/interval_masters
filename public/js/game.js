@@ -11,11 +11,11 @@ const Game = (() => {
     const sounds = {
         correct: new Howl({
             src: ['./sound/coin.wav'],
-            volume: 0.1
+            volume: 0.4
         }),
         wrong: new Howl({
             src: ['./sound/wrong.mp3'],
-            volume: 0.1
+            volume: 0.4
         })
     };
     
@@ -24,6 +24,7 @@ const Game = (() => {
     let noteSpeed = 1;
     let noteLength = 1.5;
     let nextNoteInterval = 5000;
+    let levelUp = false;
     
     // player settings
     const MOVEMENT_SPEED = 3;
@@ -42,7 +43,7 @@ const Game = (() => {
     const init = () => {
         canvas.width = window.innerWidth * 0.4;
         canvas.height = canvas.width * 0.6;
-    
+
         player = { 
             width: PLAYER_WIDTH, 
             height: PLAYER_HEIGHT, 
@@ -61,16 +62,17 @@ const Game = (() => {
         };
     }
     
+    
+    /*////////////////////////////////
+    // Event listeners / Key events //
+    ////////////////////////////////*/
+    
     window.onload = init;
     
     window.onresize = () => {
-        canvas.width = window.innerWidth * 0.4;
-        canvas.height = canvas.width * 0.6;
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
     }
-
-    /*//////////////
-    // Key events //
-    //////////////*/
 
     window.addEventListener('keydown', (event) => {
         keyPresses[event.key] = true;
@@ -98,7 +100,7 @@ const Game = (() => {
         await Tone.start();
 
         drawBackground();
-        drawGetReady();
+        drawText('Get ready!');
 
         setTimeout(() => {
             requestAnimationFrame(gameLoop);
@@ -144,6 +146,7 @@ const Game = (() => {
     }
 
     const moveSprite = (dx) => {
+        // make sure player cant move out of canvas
         if (player.position.x + dx > 0 && player.position.x + PLAYER_WIDTH + dx < canvas.width) {
             player.position.x += dx;
         }
@@ -151,10 +154,12 @@ const Game = (() => {
 
     const checkCollision = () => {
         notes.forEach((note, index) => {
-            if (note.position.x < player.position.x + player.width  && note.position.x + note.width  > player.position.x &&
+            // check if player and note collides
+            if (note.position.x < player.position.x + player.width && note.position.x + note.width > player.position.x &&
                 note.position.y < player.position.y + player.height && note.position.y + note.height > player.position.y) {
                 // The objects are touching
                 notes.splice(index, 1);
+
                 if (note.type == player.goal) { 
                     player.correctNotes++;
                     sounds.correct.play();
@@ -163,7 +168,7 @@ const Game = (() => {
                     sounds.wrong.play();
                 }
             }
-
+            // check if note collides with ground
             if ((note.position.y + note.height) >= canvas.height) { 
                 notes.splice(index, 1); 
                 if (note.type == player.goal) { 
@@ -180,7 +185,11 @@ const Game = (() => {
     const updateScore = () => {
         player.score++;
 
+        // every 2000 points increase difficulty
         if (player.score % 2000 == 0) {
+            levelUp = true;
+            setTimeout(() => levelUp = false, 2000);
+
             nextNoteInterval -= 250;
             noteSpeed += .05;
             clearInterval(intervalId);
@@ -216,15 +225,15 @@ const Game = (() => {
     }
     
     const drawBackground = () => {
-        ctx.drawImage(background, 0, 0);
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'green';
         ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
     }
 
-    const drawGetReady = () => {
+    const drawText = (text) => {
         ctx.fillStyle = 'black';
         ctx.font = '50px Libre Baskerville';
-        ctx.fillText('Get ready!', canvas.width/2 - 145, 125);
+        ctx.fillText(text, canvas.width/2 - 130, 125, canvas.width);
     }
 
     const drawScoreAndLives = () => {
@@ -232,6 +241,11 @@ const Game = (() => {
         document.getElementById('lives').innerText = player.lives;
         document.getElementById('display-collected').innerText = player.correctNotes;
         document.getElementById('display-avoided').innerText = player.avoidedNotes;
+
+        if (levelUp) {
+            drawText('LEVEL UP');
+            //ctx.fillText('LEVEL UP', canvas.width/2 - 130, 125, canvas.width);
+        }
     }
 
     /* -------------------------- */
