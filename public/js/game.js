@@ -30,7 +30,7 @@ const Game = (() => {
     const MOVEMENT_SPEED = 3;
     const PLAYER_WIDTH = 43;
     const PLAYER_HEIGHT = 70;
-    const PLAYER_LIVES = 1;
+    const PLAYER_LIVES = 3;
     let player = {};
     
     // object holding keypresses
@@ -273,8 +273,6 @@ const Game = (() => {
     
     const nextChord = (now) => {
         const intervalOrTriad = Music.constructIntervalOrTriad(player.goal);
-
-        console.log('Chord:', intervalOrTriad.tones, intervalOrTriad.interval);
 
         if (player.playBackMode == 'harmonic') {
             instrument.triggerAttackRelease(intervalOrTriad.tones, noteLength, now);
