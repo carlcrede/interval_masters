@@ -22,7 +22,7 @@ app.get('/*', (req, res) => {
 
 const server = app.listen(port, (error) => {
     if (error) {
-        console.log('Something went wrong');
+        console.error('Something went wrong', error);
     } else {
         console.log('Server running on port', server.address().port);
     }

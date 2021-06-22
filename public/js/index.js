@@ -191,7 +191,6 @@ const Index = (() => {
 
     highscoreBtn.onclick = async () => {
         const highscores = await Game.getHighScores();
-        console.log(highscores);
         displayHighscores(highscores);
     }
 

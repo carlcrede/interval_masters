@@ -9,7 +9,6 @@ const Music = (() => {
     // TODO: find a way to put fitting octaves per instrument - and maybe a range of octaves where fitting
     const constructInterval = (root, interval) => {
         let lowOctave = 3, highOctave = 3;
-        console.log(root, interval);
         const rootIndex = notes.indexOf(root);
         let nextNote = notes[(rootIndex + intervals[interval]) % notes.length];
         if (notes.indexOf(nextNote) < rootIndex) {
